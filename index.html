@@ -1,0 +1,1569 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reports Store | Elite Reports Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #030014;
+  --bg2: #0a0a1a;
+  --card: rgba(15, 15, 35, 0.65);
+  --card-solid: #0f0f23;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-glow: rgba(0, 240, 255, 0.4);
+  --cyan: #00f0ff;
+  --purple: #a855f7;
+  --pink: #ec4899;
+  --violet: #8b5cf6;
+  --text: #f8fafc;
+  --muted: #94a3b8;
+  --dim: #64748b;
+  --success: #34d399;
+  --radius: 24px;
+  --font-head: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Animated mesh background */
+.bg-mesh {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background: 
+    radial-gradient(ellipse 80% 50% at 20% -20%, rgba(0, 240, 255, 0.15), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 10%, rgba(168, 85, 247, 0.12), transparent),
+    radial-gradient(ellipse 50% 30% at 50% 100%, rgba(236, 72, 153, 0.08), transparent),
+    var(--bg);
+}
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+  pointer-events: none;
+}
+
+/* Floating orbs */
+.orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: -1;
+  animation: floatOrb 20s ease-in-out infinite;
+}
+.orb-1 { width: 400px; height: 400px; background: var(--cyan); top: -100px; left: -100px; animation-delay: 0s; }
+.orb-2 { width: 350px; height: 350px; background: var(--purple); top: 40%; right: -80px; animation-delay: -7s; }
+.orb-3 { width: 300px; height: 300px; background: var(--pink); bottom: -50px; left: 30%; animation-delay: -14s; }
+@keyframes floatOrb {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(40px, -30px) scale(1.05); }
+  66% { transform: translate(-30px, 20px) scale(0.95); }
+}
+
+.container { width: min(1200px, 92%); margin: 0 auto; position: relative; }
+
+/* ===== TOP BAR ===== */
+.top-bar {
+  background: linear-gradient(90deg, #00f0ff, #a855f7, #ec4899, #00f0ff);
+  background-size: 300% 100%;
+  animation: gradientMove 6s linear infinite;
+  text-align: center;
+  padding: 11px 16px;
+  font-weight: 700;
+  font-size: 13px;
+  color: #030014;
+  letter-spacing: 0.3px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
+}
+
+/* ===== NAV ===== */
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 0;
+  gap: 16px;
+}
+.logo {
+  font-family: var(--font-head);
+  font-size: 1.5rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  letter-spacing: -0.5px;
+}
+.logo-icon {
+  width: 42px;
+  height: 42px;
+  background: linear-gradient(135deg, var(--cyan), var(--purple));
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  box-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 25px rgba(0, 240, 255, 0.35); }
+  50% { box-shadow: 0 0 40px rgba(168, 85, 247, 0.5); }
+}
+.logo span { 
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.nav-actions { display: flex; align-items: center; gap: 12px; }
+.badge {
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  color: var(--cyan);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.lang-menu { position: relative; }
+.lang-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13.5px;
+  transition: all 0.25s;
+  backdrop-filter: blur(10px);
+}
+.lang-trigger:hover, .lang-menu.open .lang-trigger {
+  border-color: var(--cyan);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+}
+.lang-chevron { font-size: 10px; opacity: 0.7; transition: 0.2s; }
+.lang-menu.open .lang-chevron { transform: rotate(180deg); }
+.lang-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  min-width: 190px;
+  padding: 8px;
+  background: rgba(10, 10, 30, 0.95);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+  display: none;
+  z-index: 50;
+}
+.lang-menu.open .lang-dropdown {
+  display: block;
+  animation: drop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes drop {
+  from { opacity: 0; transform: translateY(-10px) scale(0.95); }
+  to { opacity: 1; transform: none; }
+}
+.lang-option {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  padding: 12px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 500;
+  transition: 0.15s;
+}
+.lang-option:hover { background: rgba(255,255,255,0.06); color: var(--text); }
+.lang-option.active {
+  background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(168,85,247,0.2));
+  color: var(--cyan);
+  font-weight: 700;
+}
+.lang-code { margin-left: auto; font-size: 11px; opacity: 0.6; }
+
+/* ===== HERO ===== */
+.hero {
+  text-align: center;
+  padding: 80px 0 60px;
+  position: relative;
+}
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  background: rgba(0, 240, 255, 0.08);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  color: var(--cyan);
+  margin-bottom: 28px;
+  animation: fadeUp 0.8s ease both;
+}
+.hero-badge .dot {
+  width: 8px;
+  height: 8px;
+  background: var(--cyan);
+  border-radius: 50%;
+  animation: blink 1.5s infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; box-shadow: 0 0 10px var(--cyan); }
+  50% { opacity: 0.4; }
+}
+.hero h1 {
+  font-family: var(--font-head);
+  font-size: clamp(2.4rem, 6.5vw, 4.2rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -1.5px;
+  margin-bottom: 20px;
+  animation: fadeUp 0.8s 0.1s ease both;
+}
+.hero h1 .gradient {
+  background: linear-gradient(135deg, var(--cyan) 0%, var(--purple) 50%, var(--pink) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+}
+.hero p {
+  color: var(--muted);
+  font-size: 1.1rem;
+  max-width: 640px;
+  margin: 0 auto 40px;
+  line-height: 1.7;
+  animation: fadeUp 0.8s 0.2s ease both;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Platforms */
+.platforms {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 36px;
+  animation: fadeUp 0.8s 0.3s ease both;
+}
+.platform {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 14.5px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+}
+.platform:hover {
+  background: rgba(255,255,255,0.06);
+  color: var(--text);
+  transform: translateY(-3px);
+  border-color: rgba(255,255,255,0.15);
+}
+.platform.active {
+  background: linear-gradient(135deg, rgba(0,240,255,0.15), rgba(168,85,247,0.15));
+  border-color: var(--cyan);
+  color: var(--cyan);
+  box-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
+}
+.platform svg { width: 20px; height: 20px; }
+
+.notice-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  border-radius: 16px;
+  background: rgba(52, 211, 153, 0.08);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  color: var(--success);
+  font-weight: 600;
+  font-size: 14px;
+  animation: fadeUp 0.8s 0.4s ease both;
+}
+
+/* ===== STATS ===== */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin: 50px 0;
+  padding: 10px 0;
+}
+.stat {
+  text-align: center;
+  padding: 28px 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  transition: all 0.3s;
+  animation: fadeUp 0.7s ease both;
+}
+.stat:nth-child(1) { animation-delay: 0.1s; }
+.stat:nth-child(2) { animation-delay: 0.2s; }
+.stat:nth-child(3) { animation-delay: 0.3s; }
+.stat:nth-child(4) { animation-delay: 0.4s; }
+.stat:hover {
+  border-color: rgba(0, 240, 255, 0.3);
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+.stat-num {
+  font-family: var(--font-head);
+  font-size: 2.2rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: block;
+  letter-spacing: -1px;
+}
+.stat-label {
+  color: var(--dim);
+  font-size: 13px;
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+/* ===== COUNTDOWN ===== */
+.countdown-wrapper {
+  text-align: center;
+  margin: 40px 0 20px;
+}
+.countdown-title {
+  color: var(--pink);
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.countdown {
+  display: inline-flex;
+  gap: 12px;
+  align-items: center;
+}
+.cd-block {
+  background: rgba(15, 15, 35, 0.8);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: 16px;
+  padding: 14px 20px;
+  min-width: 80px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.cd-block::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0,240,255,0.1), transparent);
+  pointer-events: none;
+}
+.cd-num {
+  font-family: var(--font-head);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--cyan);
+  display: block;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+}
+.cd-label {
+  font-size: 11px;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 6px;
+  font-weight: 600;
+}
+.cd-sep {
+  font-size: 1.8rem;
+  color: var(--purple);
+  font-weight: 700;
+  margin-bottom: 14px;
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* ===== SECTION TITLE ===== */
+.section-title {
+  text-align: center;
+  padding: 60px 0 36px;
+}
+.section-title h2 {
+  font-family: var(--font-head);
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -0.8px;
+}
+.section-title h2 span {
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.section-title p {
+  color: var(--dim);
+  margin-top: 12px;
+  font-size: 15px;
+}
+
+/* ===== PRICING CARDS ===== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  padding-bottom: 60px;
+}
+.card {
+  position: relative;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  padding: 36px 24px 28px;
+  text-align: center;
+  backdrop-filter: blur(16px);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  animation: fadeUp 0.7s ease both;
+}
+.card:nth-child(1) { animation-delay: 0.1s; }
+.card:nth-child(2) { animation-delay: 0.2s; }
+.card:nth-child(3) { animation-delay: 0.3s; }
+.card:nth-child(4) { animation-delay: 0.4s; }
+
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 28px;
+  padding: 1px;
+  background: linear-gradient(135deg, transparent, rgba(0,240,255,0.3), transparent);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.card:hover {
+  transform: translateY(-12px) scale(1.02);
+  border-color: rgba(0, 240, 255, 0.3);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(0, 240, 255, 0.1);
+}
+.card:hover::before { opacity: 1; }
+
+.card.featured {
+  background: linear-gradient(160deg, rgba(0, 240, 255, 0.08), rgba(168, 85, 247, 0.08));
+  border-color: rgba(0, 240, 255, 0.4);
+  box-shadow: 0 0 50px rgba(0, 240, 255, 0.15), 0 25px 50px rgba(0,0,0,0.3);
+  transform: scale(1.05);
+  z-index: 2;
+}
+.card.featured:hover {
+  transform: scale(1.05) translateY(-10px);
+  box-shadow: 0 0 60px rgba(0, 240, 255, 0.25), 0 30px 60px rgba(0,0,0,0.4);
+}
+
+.card-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  background: linear-gradient(135deg, rgba(0,240,255,0.15), rgba(168,85,247,0.15));
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  position: relative;
+}
+.card.featured .card-icon {
+  background: linear-gradient(135deg, var(--cyan), var(--purple));
+  box-shadow: 0 10px 30px rgba(0, 240, 255, 0.3);
+  border: none;
+  color: #030014;
+}
+
+.selected-platform {
+  display: inline-block;
+  margin-bottom: 14px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  color: var(--cyan);
+  font-size: 12px;
+  font-weight: 600;
+}
+.card h3 {
+  font-family: var(--font-head);
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.amount {
+  font-family: var(--font-head);
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin: 16px 0 4px;
+  letter-spacing: -2px;
+  line-height: 1;
+}
+.amount small {
+  font-size: 1rem;
+  color: var(--dim);
+  font-weight: 500;
+  letter-spacing: 0;
+}
+.price-note {
+  color: var(--dim);
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+.savings {
+  display: inline-block;
+  background: rgba(52, 211, 153, 0.1);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  color: var(--success);
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 18px;
+}
+.features {
+  text-align: left;
+  margin: 20px 0 28px;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 2.1;
+}
+.features li {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.features .check {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(52, 211, 153, 0.15);
+  color: var(--success);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  flex-shrink: 0;
+}
+
+/* Buttons */
+.buy {
+  width: 100%;
+  border: 0;
+  border-radius: 14px;
+  padding: 16px;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  font-family: inherit;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+}
+.buy-main {
+  background: linear-gradient(135deg, var(--cyan), var(--purple));
+  color: #030014;
+  box-shadow: 0 8px 30px rgba(0, 240, 255, 0.35);
+}
+.buy-main::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+  transition: 0.5s;
+}
+.buy-main:hover::after { left: 120%; }
+.buy-main:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0, 240, 255, 0.5);
+}
+.buy-secondary {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.buy-secondary:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(0, 240, 255, 0.4);
+  color: var(--cyan);
+  transform: translateY(-3px);
+}
+
+.tag {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  color: #030014;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 8px 20px;
+  border-radius: 0 0 16px 16px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 8px 20px rgba(0, 240, 255, 0.4);
+}
+
+/* ===== TRUST ===== */
+.trust {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 32px;
+  padding: 40px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 20px;
+}
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.trust-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+}
+.trust-item strong { display: block; font-size: 14.5px; color: var(--text); }
+.trust-item span { font-size: 13px; color: var(--dim); }
+
+/* ===== TESTIMONIALS ===== */
+.testimonials {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding-bottom: 60px;
+}
+.testi {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 28px;
+  backdrop-filter: blur(12px);
+  transition: all 0.3s;
+}
+.testi:hover {
+  border-color: rgba(168, 85, 247, 0.4);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+.testi-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+.testi-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--cyan), var(--purple));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #030014;
+}
+.testi-name { font-weight: 700; font-size: 15px; }
+.testi-date { color: var(--dim); font-size: 12px; }
+.stars { color: #fbbf24; font-size: 14px; margin-bottom: 12px; letter-spacing: 2px; }
+.testi p { color: var(--muted); font-size: 14.5px; line-height: 1.7; }
+
+/* ===== FOOTER ===== */
+.footer {
+  text-align: center;
+  padding: 40px 20px;
+  border-top: 1px solid var(--border);
+  color: var(--dim);
+  font-size: 14px;
+}
+.footer-trust {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-bottom: 20px;
+  font-size: 13px;
+}
+
+/* ===== MODALS ===== */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(3, 0, 20, 0.85);
+  z-index: 200;
+  padding: 20px;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(12px);
+}
+.modal.show { display: flex; animation: fadeIn 0.25s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.box {
+  width: min(460px, 100%);
+  background: linear-gradient(180deg, #0f0f28, #0a0a1c);
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: 28px;
+  padding: 36px 30px;
+  position: relative;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 60px rgba(0, 240, 255, 0.1);
+  animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+.close {
+  position: absolute;
+  right: 20px;
+  top: 18px;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  background: rgba(255,255,255,0.05);
+  color: var(--muted);
+  font-size: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+}
+.close:hover { background: rgba(255,255,255,0.1); color: var(--text); }
+.modal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: rgba(0, 240, 255, 0.1);
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  color: var(--cyan);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.box h2 { font-family: var(--font-head); font-size: 1.4rem; margin-bottom: 8px; }
+.summary {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 18px;
+  margin: 16px 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+.form label {
+  display: block;
+  color: var(--muted);
+  font-size: 13.5px;
+  font-weight: 600;
+  margin-top: 18px;
+}
+.form input {
+  width: 100%;
+  margin-top: 8px;
+  padding: 15px 18px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: rgba(0,0,0,0.3);
+  color: var(--text);
+  font-size: 15px;
+  font-family: inherit;
+  transition: 0.2s;
+}
+.form input:focus {
+  outline: none;
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.15);
+}
+.payment-card { text-align: center; }
+.payment-card .amount {
+  font-size: 3rem;
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 12px 0;
+}
+.binance {
+  display: block;
+  text-decoration: none;
+  background: linear-gradient(135deg, var(--cyan), var(--purple));
+  color: #030014;
+  padding: 17px;
+  border-radius: 14px;
+  font-weight: 700;
+  margin: 20px 0 12px;
+  font-size: 16px;
+  transition: 0.3s;
+  box-shadow: 0 8px 30px rgba(0, 240, 255, 0.3);
+}
+.binance:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0, 240, 255, 0.45); }
+.secondary {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--muted);
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: 0.2s;
+}
+.secondary:hover { border-color: var(--cyan); color: var(--cyan); }
+.qr-wrapper { margin: 20px auto; }
+.qr-wrapper img {
+  width: 180px;
+  height: 180px;
+  border-radius: 16px;
+  border: 3px solid var(--cyan);
+  padding: 6px;
+  background: #fff;
+  box-shadow: 0 0 40px rgba(0, 240, 255, 0.3);
+}
+.qr-label { display: block; margin-top: 10px; color: var(--muted); font-size: 13px; }
+
+/* RTL */
+[dir="rtl"] .features { text-align: right; }
+[dir="rtl"] .close { right: auto; left: 20px; }
+[dir="rtl"] .lang-dropdown { right: auto; left: 0; }
+[dir="rtl"] .lang-option { text-align: right; }
+[dir="rtl"] .lang-code { margin-left: 0; margin-right: auto; }
+[dir="rtl"] body { font-family: 'Inter', system-ui, sans-serif; }
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+  .card.featured { transform: none; }
+  .card.featured:hover { transform: translateY(-10px); }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .testimonials { grid-template-columns: 1fr; max-width: 500px; margin: 0 auto; }
+}
+@media (max-width: 640px) {
+  .grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+  .badge { display: none; }
+  .hero { padding: 50px 0 40px; }
+  .hero h1 { font-size: 2rem; }
+  .stats { gap: 12px; }
+  .stat-num { font-size: 1.8rem; }
+  .cd-block { min-width: 64px; padding: 12px 14px; }
+  .cd-num { font-size: 1.5rem; }
+  .trust { gap: 20px; }
+  .nav { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+<div class="bg-mesh"></div>
+<div class="bg-grid"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <span id="topBarText">Limited Offer — Get 20% More Reports Today! Ends in</span>
+  <span id="topCountdown">--:--:--</span>
+</div>
+
+<div class="container">
+  <!-- NAV -->
+  <header class="nav">
+    <div class="logo">
+      <div class="logo-icon">⚡</div>
+      <span>Reports Store</span>
+    </div>
+    <div class="nav-actions">
+      <div class="badge" id="fastBadge">
+        <span class="live-dot" style="width:6px;height:6px;background:#00f0ff;border-radius:50%;display:inline-block"></span>
+        Fast Delivery
+      </div>
+      <div class="lang-menu" id="langMenu">
+        <button class="lang-trigger" id="langTrigger" type="button">
+          <span>🌐</span><span id="currentLanguage">EN</span><span class="lang-chevron">▼</span>
+        </button>
+        <div class="lang-dropdown" id="langDropdown">
+          <button class="lang-option active" data-lang="en"><span>🇬🇧</span> English <span class="lang-code">EN</span></button>
+          <button class="lang-option" data-lang="ar"><span>🇸🇦</span> العربية <span class="lang-code">AR</span></button>
+          <button class="lang-option" data-lang="fr"><span>🇫🇷</span> Français <span class="lang-code">FR</span></button>
+          <button class="lang-option" data-lang="pt"><span>🇵🇹</span> Português <span class="lang-code">PT</span></button>
+          <button class="lang-option" data-lang="es"><span>🇪🇸</span> Español <span class="lang-code">ES</span></button>
+          <button class="lang-option" data-lang="hi"><span>🇮🇳</span> हिन्दी <span class="lang-code">HI</span></button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge" id="heroBadge">
+      <span class="dot"></span>
+      Elite Reports Platform
+    </div>
+    <h1 id="heroTitle">Submit <span class="gradient">Mass Reports</span><br>Across All Platforms</h1>
+    <p id="heroDesc">The most advanced platform to send bulk reports on Facebook, TikTok, Instagram & YouTube — lightning fast, fully organized, and completely secure.</p>
+
+    <div class="platforms">
+      <button class="platform active" data-platform="Facebook">
+        <svg viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.07C24 5.41 18.63 0 12 0S0 5.41 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.5c-1.5 0-1.96.93-1.96 1.89v2.26h3.32l-.53 3.5h-2.8V24C19.62 23.1 24 18.1 24 12.07"/></svg>
+        Facebook
+      </button>
+      <button class="platform" data-platform="YouTube">
+        <svg viewBox="0 0 24 24" fill="#FF0033"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 0 0 .5 6.2 31.5 31.5 0 0 0 0 12a31.5 31.5 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 0 0 2.1-2.1A31.5 31.5 0 0 0 24 12a31.5 31.5 0 0 0-.5-5.8zM9.8 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>
+        YouTube
+      </button>
+      <button class="platform" data-platform="TikTok">
+        <svg viewBox="0 0 24 24"><path fill="#25F4EE" d="M19.6 7.2a5.3 5.3 0 0 1-3.1-1V14a6 6 0 1 1-6-6v3.1a2.9 2.9 0 1 0 2.9 2.9V2h3.1c.2 2.1 1.5 3.9 3.1 4.6v.6z"/><path fill="#FE2C55" d="M16.5 6.2A5.3 5.3 0 0 1 19.6 7.2v3.1a8.3 8.3 0 0 1-3.1-.7v6.2a6 6 0 1 1-6-6v3.1a2.9 2.9 0 1 0 2.9 2.9V2h3.1v4.2z"/></svg>
+        TikTok
+      </button>
+      <button class="platform" data-platform="Instagram">
+        <svg viewBox="0 0 24 24"><defs><linearGradient id="ig" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stop-color="#f09433"/><stop offset="50%" stop-color="#dc2743"/><stop offset="100%" stop-color="#bc1888"/></linearGradient></defs><rect x="2" y="2" width="20" height="20" rx="5" fill="url(#ig)"/><circle cx="12" cy="12" r="4.5" fill="none" stroke="#fff" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1.5" fill="#fff"/></svg>
+        Instagram
+      </button>
+    </div>
+
+    <div class="notice-bar" id="notice">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      Guaranteed delivery in less than 24 hours
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat">
+      <span class="stat-num" data-target="15200" id="stat1">0</span>
+      <div class="stat-label" id="statLabel1">Orders Completed</div>
+    </div>
+    <div class="stat">
+      <span class="stat-num" data-target="98" id="stat2">0</span>
+      <div class="stat-label" id="statLabel2">% Success Rate</div>
+    </div>
+    <div class="stat">
+      <span class="stat-num" data-target="3400" id="stat3">0</span>
+      <div class="stat-label" id="statLabel3">Happy Clients</div>
+    </div>
+    <div class="stat">
+      <span class="stat-num" data-target="24" id="stat4">0</span>
+      <div class="stat-label" id="statLabel4">Hour Delivery</div>
+    </div>
+  </div>
+
+  <!-- COUNTDOWN -->
+  <div class="countdown-wrapper">
+    <div class="countdown-title">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <span id="cdTitle">Special pricing ends in</span>
+    </div>
+    <div class="countdown">
+      <div class="cd-block"><span class="cd-num" id="cdH">00</span><span class="cd-label" id="cdHLabel">hrs</span></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-block"><span class="cd-num" id="cdM">00</span><span class="cd-label" id="cdMLabel">min</span></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-block"><span class="cd-num" id="cdS">00</span><span class="cd-label" id="cdSLabel">sec</span></div>
+    </div>
+  </div>
+
+  <!-- PLANS -->
+  <div class="section-title">
+    <h2 id="plansTitle">Choose Your <span>Package</span></h2>
+    <p id="plansSubtitle">Premium plans with instant processing & 24/7 priority support</p>
+  </div>
+
+  <main class="grid">
+    <!-- BRONZE -->
+    <div class="card">
+      <div class="card-icon">01</div>
+      <div class="selected-platform">Facebook</div>
+      <h3 class="plan-name" data-plan="bronze">Starter</h3>
+      <div class="amount">$35 <small>/ 10K</small></div>
+      <div class="price-note">$0.0035 per report</div>
+      <ul class="features" data-features="bronze">
+        <li><span class="check">✓</span> 10,000 Reports</li>
+        <li><span class="check">✓</span> Fast processing</li>
+        <li><span class="check">✓</span> Standard support</li>
+      </ul>
+      <button class="buy buy-secondary" data-plan="bronze" data-reports="10,000" data-price="35">Get Started</button>
+    </div>
+
+    <!-- SILVER -->
+    <div class="card">
+      <div class="card-icon">02</div>
+      <div class="selected-platform">Facebook</div>
+      <h3 class="plan-name" data-plan="silver">Pro</h3>
+      <div class="amount">$50 <small>/ 20K</small></div>
+      <div class="price-note">$0.0025 per report</div>
+      <div class="savings" id="savingsSilver">Save 29%</div>
+      <ul class="features" data-features="silver">
+        <li><span class="check">✓</span> 20,000 Reports</li>
+        <li><span class="check">✓</span> Fast processing</li>
+        <li><span class="check">✓</span> Priority support</li>
+      </ul>
+      <button class="buy buy-secondary" data-plan="silver" data-reports="20,000" data-price="50">Get Started</button>
+    </div>
+
+    <!-- GOLD FEATURED -->
+    <div class="card featured">
+      <div class="tag" id="popularTag">MOST POPULAR</div>
+      <div class="card-icon">03</div>
+      <div class="selected-platform">Facebook</div>
+      <h3 class="plan-name" data-plan="gold">Elite</h3>
+      <div class="amount">$70 <small>/ 50K</small></div>
+      <div class="price-note">$0.0014 per report</div>
+      <div class="savings" id="savingsGold">Best Value — 60% off</div>
+      <ul class="features" data-features="gold">
+        <li><span class="check">✓</span> 50,000 Reports</li>
+        <li><span class="check">✓</span> Priority queue</li>
+        <li><span class="check">✓</span> VIP support</li>
+      </ul>
+      <button class="buy buy-main" data-plan="gold" data-reports="50,000" data-price="70">Get Elite Access</button>
+    </div>
+
+    <!-- DIAMOND -->
+    <div class="card">
+      <div class="card-icon">04</div>
+      <div class="selected-platform">Facebook</div>
+      <h3 class="plan-name" data-plan="diamond">Ultimate</h3>
+      <div class="amount">$100 <small>/ 100K</small></div>
+      <div class="price-note">$0.001 per report</div>
+      <div class="savings" id="savingsDiamond">Lowest price / report</div>
+      <ul class="features" data-features="diamond">
+        <li><span class="check">✓</span> 100,000 Reports</li>
+        <li><span class="check">✓</span> Highest priority</li>
+        <li><span class="check">✓</span> Dedicated support</li>
+      </ul>
+      <button class="buy buy-secondary" data-plan="diamond" data-reports="100,000" data-price="100">Get Started</button>
+    </div>
+  </main>
+
+  <!-- TRUST -->
+  <div class="trust">
+    <div class="trust-item">
+      <div class="trust-icon">🔒</div>
+      <div><strong id="trust1">Secure Payment</strong><span id="trust1sub">via Binance Pay</span></div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">⚡</div>
+      <div><strong id="trust2">Lightning Fast</strong><span id="trust2sub">Under 24 Hours</span></div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">🛡️</div>
+      <div><strong id="trust3">Money-Back</strong><span id="trust3sub">If Not Delivered</span></div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-icon">💬</div>
+      <div><strong id="trust4">24/7 Support</strong><span id="trust4sub">Always Online</span></div>
+    </div>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <div class="section-title">
+    <h2 id="testiTitle">What Our <span>Clients</span> Say</h2>
+  </div>
+  <div class="testimonials">
+    <div class="testi">
+      <div class="testi-top">
+        <div class="testi-avatar">A</div>
+        <div>
+          <div class="testi-name" id="t1name">Ahmed K.</div>
+          <div class="testi-date">2 days ago</div>
+        </div>
+      </div>
+      <div class="stars">★★★★★</div>
+      <p id="t1text">Ordered the Elite package. Reports landed in under 12 hours. Insanely fast and professional.</p>
+    </div>
+    <div class="testi">
+      <div class="testi-top">
+        <div class="testi-avatar">M</div>
+        <div>
+          <div class="testi-name" id="t2name">Maria S.</div>
+          <div class="testi-date">5 days ago</div>
+        </div>
+      </div>
+      <div class="stars">★★★★★</div>
+      <p id="t2text">Used Ultimate twice already. Perfect results every single time. This is the real deal.</p>
+    </div>
+    <div class="testi">
+      <div class="testi-top">
+        <div class="testi-avatar">J</div>
+        <div>
+          <div class="testi-name" id="t3name">James T.</div>
+          <div class="testi-date">1 week ago</div>
+        </div>
+      </div>
+      <div class="stars">★★★★★</div>
+      <p id="t3text">Support replied in minutes. Binance payment was seamless. Highly recommended.</p>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-trust">
+      <span>🔒 Secure Payments</span>
+      <span>⚡ Instant Processing</span>
+      <span>🛡️ Trusted by 3400+</span>
+      <span>💬 24/7 Live Support</span>
+    </div>
+    <div>© 2026 Reports Store — All Rights Reserved</div>
+  </footer>
+</div>
+
+<!-- ORDER MODAL -->
+<div class="modal" id="orderModal">
+  <div class="box">
+    <button class="close" id="closeOrder">×</button>
+    <div class="modal-badge" id="orderTitle">Complete Your Order</div>
+    <div class="summary" id="summary"></div>
+    <form class="form" id="orderForm">
+      <label><span id="platformLabel">Platform</span><input id="platformInput" readonly></label>
+      <label><span id="accountLabel">Username or account URL</span><input id="account" required placeholder="Enter username or profile URL"></label>
+      <br><br>
+      <button class="buy buy-main" id="confirmBtn" type="submit">Confirm Order →</button>
+    </form>
+  </div>
+</div>
+
+<!-- PAYMENT MODAL -->
+<div class="modal" id="paymentModal">
+  <div class="box payment-card">
+    <button class="close" id="closePayment">×</button>
+    <h2 id="paymentTitle">Payment via Binance</h2>
+    <p id="paymentText" style="color:var(--muted);font-size:14px;margin:8px 0"></p>
+    <div class="amount" id="paymentAmount"></div>
+    <div class="qr-wrapper">
+      <img src="https://i.ibb.co/Lz1r1s3Q/Screenshot-2026-09-26-12-52-00-966-com-binance-dev-edit.jpg" alt="Binance QR" id="qrImage">
+      <span class="qr-label" id="qrLabel">Scan with Binance App</span>
+    </div>
+    <p id="paymentDesc" style="color:var(--dim);font-size:13px;margin-bottom:8px">Complete the payment after confirming your order.</p>
+    <a class="binance" id="binanceLink" target="_blank" rel="noopener">Pay now via Binance →</a>
+    <button class="secondary" id="backButton">← Back</button>
+  </div>
+</div>
+
+<script>
+const BINANCE = {
+  "35":"https://app.binance.com/uni-qr/request-to-pay?billOrderId=455547156089266176&billType=request_a_payment",
+  "50":"https://app.binance.com/uni-qr/request-to-pay?billOrderId=456511081849847808&billType=request_a_payment",
+  "70":"https://app.binance.com/uni-qr/request-to-pay?billOrderId=456511451405811712&billType=request_a_payment",
+  "100":"https://app.binance.com/uni-qr/request-to-pay?billOrderId=456511550021984256&billType=request_a_payment"
+};
+
+const T = {
+  en:{
+    fast:'Fast Delivery',heroBadge:'Elite Reports Platform',
+    heroTitle:'Submit <span class="gradient">Mass Reports</span><br>Across All Platforms',
+    heroDesc:'The most advanced platform to send bulk reports on Facebook, TikTok, Instagram & YouTube — lightning fast, fully organized, and completely secure.',
+    notice:'Guaranteed delivery in less than 24 hours',popular:'MOST POPULAR',
+    buy:'Get Started',buyFeatured:'Get Elite Access',
+    order:'Complete Your Order',platform:'Platform',account:'Username or account URL',placeholder:'Enter username or profile URL',
+    confirm:'Confirm Order →',payment:'Payment via Binance',paymentDesc:'Complete the payment after confirming your order.',
+    pay:'Pay now via Binance →',back:'← Back',summarySep:' — ',
+    bronze:'Starter',silver:'Pro',gold:'Elite',diamond:'Ultimate',
+    fastRequest:'Fast processing',priority:'Highest priority',support:'Standard support',
+    title:'Reports Store | Elite Reports Platform',qrLabel:'Scan with Binance App',
+    plansTitle:'Choose Your <span>Package</span>',plansSubtitle:'Premium plans with instant processing & 24/7 priority support',
+    testiTitle:'What Our <span>Clients</span> Say',
+    statLabel1:'Orders Completed',statLabel2:'% Success Rate',statLabel3:'Happy Clients',statLabel4:'Hour Delivery',
+    trust1:'Secure Payment',trust1sub:'via Binance Pay',trust2:'Lightning Fast',trust2sub:'Under 24 Hours',
+    trust3:'Money-Back',trust3sub:'If Not Delivered',trust4:'24/7 Support',trust4sub:'Always Online',
+    savingsSilver:'Save 29%',savingsGold:'Best Value — 60% off',savingsDiamond:'Lowest price / report',
+    cdTitle:'Special pricing ends in',cdHLabel:'hrs',cdMLabel:'min',cdSLabel:'sec',
+    topBar:'Limited Offer — Get 20% More Reports Today! Ends in',
+    t1:'Ordered the Elite package. Reports landed in under 12 hours. Insanely fast and professional.',
+    t2:'Used Ultimate twice already. Perfect results every single time. This is the real deal.',
+    t3:'Support replied in minutes. Binance payment was seamless. Highly recommended.'
+  },
+  ar:{
+    fast:'توصيل سريع',heroBadge:'منصة البلاغات النخبوية',
+    heroTitle:'أرسل <span class="gradient">بلاغات جماعية</span><br>على جميع المنصات',
+    heroDesc:'المنصة الأكثر تطوراً لإرسال بلاغات جماعية على فيسبوك وتيك توك وإنستغرام ويوتيوب — سريع جداً، منظم، وآمن بالكامل.',
+    notice:'ضمان التوصيل في أقل من 24 ساعة',popular:'الأكثر طلباً',
+    buy:'ابدأ الآن',buyFeatured:'احصل على النخبة',
+    order:'إتمام الطلب',platform:'المنصة',account:'اسم المستخدم أو الرابط',placeholder:'أدخل اسم المستخدم أو رابط الحساب',
+    confirm:'تأكيد الطلب →',payment:'الدفع عبر Binance',paymentDesc:'أكمل الدفع بعد تأكيد الطلب.',
+    pay:'ادفع الآن عبر Binance →',back:'→ رجوع',summarySep:' — ',
+    bronze:'المبتدئ',silver:'المحترف',gold:'النخبة',diamond:'الأقصى',
+    fastRequest:'معالجة سريعة',priority:'أولوية قصوى',support:'دعم عادي',
+    title:'Reports Store | منصة البلاغات',qrLabel:'امسح بتطبيق Binance',
+    plansTitle:'اختر <span>باقتك</span>',plansSubtitle:'باقات مميزة مع معالجة فورية ودعم على مدار الساعة',
+    testiTitle:'ماذا يقول <span>عملاؤنا</span>',
+    statLabel1:'طلبات منجزة',statLabel2:'% نسبة النجاح',statLabel3:'عملاء سعداء',statLabel4:'ساعة توصيل',
+    trust1:'دفع آمن',trust1sub:'عبر Binance',trust2:'سرعة فائقة',trust2sub:'أقل من 24 ساعة',
+    trust3:'استرداد المال',trust3sub:'إذا لم يُسلّم',trust4:'دعم 24/7',trust4sub:'دائماً متاح',
+    savingsSilver:'وفّر 29%',savingsGold:'أفضل قيمة — خصم 60%',savingsDiamond:'أقل سعر لكل بلاغ',
+    cdTitle:'ينتهي العرض خلال',cdHLabel:'ساعة',cdMLabel:'دقيقة',cdSLabel:'ثانية',
+    topBar:'عرض محدود — 20% بلاغات إضافية! ينتهي خلال',
+    t1:'طلبت باقة النخبة ووصلت البلاغات خلال 12 ساعة. سريع جداً واحترافي.',
+    t2:'استخدمت الأقصى مرتين. نتائج مثالية في كل مرة. هذا هو الحقيقي.',
+    t3:'الدعم رد خلال دقائق. الدفع عبر Binance كان سلساً. أنصح به بشدة.'
+  },
+  fr:{
+    fast:'Livraison rapide',heroBadge:'Plateforme Elite Reports',
+    heroTitle:'Envoyez des <span class="gradient">signalements massifs</span><br>sur toutes les plateformes',
+    heroDesc:'La plateforme la plus avancée pour envoyer des signalements en masse sur Facebook, TikTok, Instagram et YouTube.',
+    notice:'Livraison garantie en moins de 24 heures',popular:'LE PLUS POPULAIRE',
+    buy:'Commencer',buyFeatured:'Accès Elite',
+    order:'Finaliser la commande',platform:'Plateforme',account:'Nom d\'utilisateur ou URL',placeholder:'Entrez le nom ou l\'URL',
+    confirm:'Confirmer →',payment:'Paiement via Binance',paymentDesc:'Complétez le paiement après confirmation.',
+    pay:'Payer via Binance →',back:'← Retour',summarySep:' — ',
+    bronze:'Starter',silver:'Pro',gold:'Elite',diamond:'Ultimate',
+    fastRequest:'Traitement rapide',priority:'Priorité maximale',support:'Support standard',
+    title:'Reports Store | Plateforme Elite',qrLabel:'Scannez avec Binance',
+    plansTitle:'Choisissez votre <span>forfait</span>',plansSubtitle:'Forfaits premium avec traitement instantané',
+    testiTitle:'Avis de nos <span>clients</span>',
+    statLabel1:'Commandes',statLabel2:'% Succès',statLabel3:'Clients heureux',statLabel4:'Heures',
+    trust1:'Paiement sécurisé',trust1sub:'via Binance',trust2:'Ultra rapide',trust2sub:'Sous 24h',
+    trust3:'Remboursement',trust3sub:'Si non livré',trust4:'Support 24/7',trust4sub:'Toujours dispo',
+    savingsSilver:'Économisez 29%',savingsGold:'Meilleure valeur — 60%',savingsDiamond:'Prix le plus bas',
+    cdTitle:'L\'offre se termine dans',cdHLabel:'h',cdMLabel:'min',cdSLabel:'sec',
+    topBar:'Offre limitée — 20% de plus ! Se termine dans',
+    t1:'Forfait Elite livré en moins de 12 heures. Incroyablement rapide.',
+    t2:'J\'ai utilisé Ultimate deux fois. Résultats parfaits à chaque fois.',
+    t3:'Support en quelques minutes. Paiement Binance fluide. Je recommande.'
+  },
+  pt:{
+    fast:'Entrega rápida',heroBadge:'Plataforma Elite Reports',
+    heroTitle:'Envie <span class="gradient">denúncias em massa</span><br>em todas as plataformas',
+    heroDesc:'A plataforma mais avançada para enviar denúncias em massa no Facebook, TikTok, Instagram e YouTube.',
+    notice:'Entrega garantida em menos de 24 horas',popular:'MAIS POPULAR',
+    buy:'Começar',buyFeatured:'Acesso Elite',
+    order:'Finalizar pedido',platform:'Plataforma',account:'Nome ou URL',placeholder:'Digite o nome ou URL',
+    confirm:'Confirmar →',payment:'Pagamento via Binance',paymentDesc:'Complete o pagamento após confirmar.',
+    pay:'Pagar via Binance →',back:'← Voltar',summarySep:' — ',
+    bronze:'Starter',silver:'Pro',gold:'Elite',diamond:'Ultimate',
+    fastRequest:'Processamento rápido',priority:'Prioridade máxima',support:'Suporte padrão',
+    title:'Reports Store | Plataforma Elite',qrLabel:'Escaneie com Binance',
+    plansTitle:'Escolha seu <span>pacote</span>',plansSubtitle:'Pacotes premium com processamento instantâneo',
+    testiTitle:'O que nossos <span>clientes</span> dizem',
+    statLabel1:'Pedidos',statLabel2:'% Sucesso',statLabel3:'Clientes',statLabel4:'Horas',
+    trust1:'Pagamento seguro',trust1sub:'via Binance',trust2:'Super rápido',trust2sub:'Menos de 24h',
+    trust3:'Reembolso',trust3sub:'Se não entregue',trust4:'Suporte 24/7',trust4sub:'Sempre online',
+    savingsSilver:'Poupe 29%',savingsGold:'Melhor valor — 60%',savingsDiamond:'Menor preço',
+    cdTitle:'A oferta termina em',cdHLabel:'h',cdMLabel:'min',cdSLabel:'seg',
+    topBar:'Oferta limitada — 20% a mais! Termina em',
+    t1:'Pacote Elite entregue em menos de 12 horas. Incrivelmente rápido.',
+    t2:'Usei o Ultimate duas vezes. Resultados perfeitos sempre.',
+    t3:'Suporte em minutos. Pagamento Binance suave. Recomendo.'
+  },
+  es:{
+    fast:'Entrega rápida',heroBadge:'Plataforma Elite Reports',
+    heroTitle:'Envía <span class="gradient">reportes masivos</span><br>en todas las plataformas',
+    heroDesc:'La plataforma más avanzada para enviar reportes masivos en Facebook, TikTok, Instagram y YouTube.',
+    notice:'Entrega garantizada en menos de 24 horas',popular:'MÁS POPULAR',
+    buy:'Empezar',buyFeatured:'Acceso Elite',
+    order:'Completar pedido',platform:'Plataforma',account:'Usuario o URL',placeholder:'Introduce usuario o URL',
+    confirm:'Confirmar →',payment:'Pago con Binance',paymentDesc:'Completa el pago después de confirmar.',
+    pay:'Pagar con Binance →',back:'← Volver',summarySep:' — ',
+    bronze:'Starter',silver:'Pro',gold:'Elite',diamond:'Ultimate',
+    fastRequest:'Procesamiento rápido',priority:'Máxima prioridad',support:'Soporte estándar',
+    title:'Reports Store | Plataforma Elite',qrLabel:'Escanea con Binance',
+    plansTitle:'Elige tu <span>paquete</span>',plansSubtitle:'Paquetes premium con procesamiento instantáneo',
+    testiTitle:'Lo que dicen nuestros <span>clientes</span>',
+    statLabel1:'Pedidos',statLabel2:'% Éxito',statLabel3:'Clientes',statLabel4:'Horas',
+    trust1:'Pago seguro',trust1sub:'via Binance',trust2:'Súper rápido',trust2sub:'Menos de 24h',
+    trust3:'Reembolso',trust3sub:'Si no se entrega',trust4:'Soporte 24/7',trust4sub:'Siempre online',
+    savingsSilver:'Ahorra 29%',savingsGold:'Mejor valor — 60%',savingsDiamond:'Precio más bajo',
+    cdTitle:'La oferta termina en',cdHLabel:'h',cdMLabel:'min',cdSLabel:'seg',
+    topBar:'Oferta limitada — ¡20% más! Termina en',
+    t1:'Paquete Elite entregado en menos de 12 horas. Increíblemente rápido.',
+    t2:'Usé Ultimate dos veces. Resultados perfectos siempre.',
+    t3:'Soporte en minutos. Pago Binance fluido. Lo recomiendo.'
+  },
+  hi:{
+    fast:'तेज़ डिलीवरी',heroBadge:'एलीट रिपोर्ट्स प्लेटफ़ॉर्म',
+    heroTitle:'सभी प्लेटफ़ॉर्म पर <span class="gradient">सामूहिक रिपोर्ट</span><br>भेजें',
+    heroDesc:'Facebook, TikTok, Instagram और YouTube पर बल्क रिपोर्ट भेजने का सबसे उन्नत प्लेटफ़ॉर्म।',
+    notice:'24 घंटे से कम में डिलीवरी की गारंटी',popular:'सबसे लोकप्रिय',
+    buy:'शुरू करें',buyFeatured:'एलीट एक्सेस',
+    order:'ऑर्डर पूरा करें',platform:'प्लेटफ़ॉर्म',account:'यूज़रनेम या URL',placeholder:'यूज़रनेम या URL दर्ज करें',
+    confirm:'पुष्टि करें →',payment:'Binance से भुगतान',paymentDesc:'पुष्टि के बाद भुगतान पूरा करें।',
+    pay:'Binance से भुगतान करें →',back:'← वापस',summarySep:' — ',
+    bronze:'स्टार्टर',silver:'प्रो',gold:'एलीट',diamond:'अल्टीमेट',
+    fastRequest:'तेज़ प्रोसेसिंग',priority:'उच्चतम प्राथमिकता',support:'स्टैंडर्ड सपोर्ट',
+    title:'Reports Store | एलीट प्लेटफ़ॉर्म',qrLabel:'Binance ऐप से स्कैन करें',
+    plansTitle:'अपना <span>पैकेज</span> चुनें',plansSubtitle:'प्रीमियम प्लान त्वरित प्रोसेसिंग के साथ',
+    testiTitle:'हमारे <span>ग्राहक</span> क्या कहते हैं',
+    statLabel1:'पूर्ण ऑर्डर',statLabel2:'% सफलता',statLabel3:'खुश ग्राहक',statLabel4:'घंटे',
+    trust1:'सुरक्षित भुगतान',trust1sub:'Binance से',trust2:'बिजली की तरह तेज़',trust2sub:'24 घंटे से कम',
+    trust3:'मनी-बैक',trust3sub:'न मिले तो',trust4:'24/7 सपोर्ट',trust4sub:'हमेशा ऑनलाइन',
+    savingsSilver:'29% बचाएं',savingsGold:'बेस्ट वैल्यू — 60% छूट',savingsDiamond:'सबसे कम कीमत',
+    cdTitle:'ऑफर समाप्त होने में',cdHLabel:'घं',cdMLabel:'मि',cdSLabel:'से',
+    topBar:'सीमित ऑफर — 20% अधिक! समाप्त:',
+    t1:'एलीट पैकेज 12 घंटे से कम में मिला। बहुत तेज़ और प्रोफेशनल।',
+    t2:'अल्टीमेट दो बार इस्तेमाल किया। हर बार परफेक्ट रिजल्ट।',
+    t3:'सपोर्ट मिनटों में मिला। Binance भुगतान आसान था।'
+  }
+};
+
+let lang = 'en', platform = 'Facebook', selected = null;
+const $ = id => document.getElementById(id);
+
+function setHTML(el, key) { if (el) el.innerHTML = T[lang][key]; }
+function setText(el, key) { if (el) el.textContent = T[lang][key]; }
+
+function updateLanguage() {
+  const t = T[lang];
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  document.title = t.title;
+
+  setText($('fastBadge'), 'fast');
+  setHTML($('heroBadge'), 'heroBadge');
+  // keep the dot
+  $('heroBadge').innerHTML = `<span class="dot"></span> ${t.heroBadge}`;
+  setHTML($('heroTitle'), 'heroTitle');
+  setText($('heroDesc'), 'heroDesc');
+  setText($('notice'), 'notice');
+  // restore icon in notice
+  $('notice').innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> ${t.notice}`;
+  setText($('popularTag'), 'popular');
+  setText($('orderTitle'), 'order');
+  setText($('platformLabel'), 'platform');
+  setText($('accountLabel'), 'account');
+  setText($('confirmBtn'), 'confirm');
+  setText($('paymentTitle'), 'payment');
+  setText($('paymentDesc'), 'paymentDesc');
+  setText($('binanceLink'), 'pay');
+  setText($('backButton'), 'back');
+  setText($('qrLabel'), 'qrLabel');
+  setHTML($('plansTitle'), 'plansTitle');
+  setText($('plansSubtitle'), 'plansSubtitle');
+  setHTML($('testiTitle'), 'testiTitle');
+  setText($('cdTitle'), 'cdTitle');
+  setText($('cdHLabel'), 'cdHLabel');
+  setText($('cdMLabel'), 'cdMLabel');
+  setText($('cdSLabel'), 'cdSLabel');
+  setText($('topBarText'), 'topBar');
+
+  setText($('statLabel1'), 'statLabel1');
+  setText($('statLabel2'), 'statLabel2');
+  setText($('statLabel3'), 'statLabel3');
+  setText($('statLabel4'), 'statLabel4');
+
+  setText($('trust1'), 'trust1'); setText($('trust1sub'), 'trust1sub');
+  setText($('trust2'), 'trust2'); setText($('trust2sub'), 'trust2sub');
+  setText($('trust3'), 'trust3'); setText($('trust3sub'), 'trust3sub');
+  setText($('trust4'), 'trust4'); setText($('trust4sub'), 'trust4sub');
+
+  setText($('savingsSilver'), 'savingsSilver');
+  setText($('savingsGold'), 'savingsGold');
+  setText($('savingsDiamond'), 'savingsDiamond');
+
+  setText($('t1text'), 't1'); setText($('t2text'), 't2'); setText($('t3text'), 't3');
+
+  $('currentLanguage').textContent = {en:'EN',ar:'AR',fr:'FR',pt:'PT',es:'ES',hi:'HI'}[lang];
+  document.querySelectorAll('.lang-option').forEach(o => o.classList.toggle('active', o.dataset.lang === lang));
+  $('account').placeholder = t.placeholder;
+
+  document.querySelectorAll('.buy:not(#confirmBtn)').forEach(b => {
+    b.textContent = b.classList.contains('buy-main') ? t.buyFeatured : t.buy;
+  });
+
+  document.querySelectorAll('.plan-name').forEach(el => el.textContent = t[el.dataset.plan]);
+
+  document.querySelectorAll('[data-features]').forEach(el => {
+    const k = el.dataset.features;
+    const reports = {bronze:'10,000',silver:'20,000',gold:'50,000',diamond:'100,000'}[k];
+    const f2 = k === 'diamond' ? t.priority : t.fastRequest;
+    const f3 = k === 'bronze' ? t.support : (k === 'silver' ? 'Priority support' : (k === 'gold' ? 'VIP support' : 'Dedicated support'));
+    // simplified for all langs
+    el.innerHTML = `
+      <li><span class="check">✓</span> ${reports} Reports</li>
+      <li><span class="check">✓</span> ${f2}</li>
+      <li><span class="check">✓</span> ${t.support}</li>
+    `;
+  });
+
+  updatePackagePlatform();
+  if (selected) {
+    $('summary').textContent = t[selected.plan] + t.summarySep + selected.reports + ' Reports — $' + selected.price;
+    $('paymentText').textContent = t[selected.plan] + t.summarySep + selected.reports + ' Reports';
+  }
+}
+
+function updatePackagePlatform() {
+  document.querySelectorAll('.selected-platform').forEach(el => el.textContent = platform);
+}
+
+function animateStats() {
+  document.querySelectorAll('.stat-num').forEach(el => {
+    const target = parseInt(el.dataset.target);
+    const duration = 2000;
+    const start = performance.now();
+    function update(now) {
+      const progress = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 4);
+      const current = Math.floor(target * ease);
+      el.textContent = target >= 1000 ? current.toLocaleString() : current;
+      if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  });
+}
+
+function initCountdown() {
+  const key = 'cdEndTime_v2';
+  let end = localStorage.getItem(key);
+  if (!end || Date.now() > parseInt(end)) {
+    end = Date.now() + 5*60*60*1000 + 48*60*1000 + 33*1000;
+    localStorage.setItem(key, end);
+  }
+  function tick() {
+    const diff = Math.max(0, parseInt(end) - Date.now());
+    const h = Math.floor(diff / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    const pad = n => String(n).padStart(2, '0');
+    $('cdH').textContent = pad(h);
+    $('cdM').textContent = pad(m);
+    $('cdS').textContent = pad(s);
+    $('topCountdown').textContent = `${pad(h)}:${pad(m)}:${pad(s)}`;
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+
+updateLanguage();
+animateStats();
+initCountdown();
+
+document.querySelectorAll('.platform').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.platform').forEach(x => x.classList.remove('active'));
+  b.classList.add('active');
+  platform = b.dataset.platform;
+  updatePackagePlatform();
+});
+
+document.querySelectorAll('.lang-option').forEach(o => o.onclick = () => {
+  lang = o.dataset.lang;
+  updateLanguage();
+  closeLangMenu();
+});
+function closeLangMenu() {
+  $('langMenu').classList.remove('open');
+  $('langTrigger').setAttribute('aria-expanded', 'false');
+}
+$('langTrigger').onclick = () => {
+  const open = $('langMenu').classList.toggle('open');
+  $('langTrigger').setAttribute('aria-expanded', String(open));
+};
+document.addEventListener('click', e => { if (!$('langMenu').contains(e.target)) closeLangMenu(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLangMenu(); });
+
+document.querySelectorAll('.buy:not(#confirmBtn)').forEach(b => b.onclick = () => {
+  selected = { plan: b.dataset.plan, reports: b.dataset.reports, price: Number(b.dataset.price) };
+  $('platformInput').value = platform;
+  $('summary').textContent = T[lang][selected.plan] + T[lang].summarySep + selected.reports + ' Reports — $' + selected.price;
+  $('orderModal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+});
+
+$('closeOrder').onclick = () => { $('orderModal').classList.remove('show'); document.body.style.overflow = ''; };
+$('orderForm').onsubmit = e => {
+  e.preventDefault();
+  if (!selected) return;
+  const url = BINANCE[String(selected.price)];
+  if (!url) return;
+  $('orderModal').classList.remove('show');
+  $('paymentText').textContent = T[lang][selected.plan] + T[lang].summarySep + selected.reports + ' Reports';
+  $('paymentAmount').textContent = '$' + selected.price;
+  $('binanceLink').href = url;
+  $('paymentModal').classList.add('show');
+};
+$('closePayment').onclick = () => { $('paymentModal').classList.remove('show'); document.body.style.overflow = ''; };
+$('backButton').onclick = () => { $('paymentModal').classList.remove('show'); $('orderModal').classList.add('show'); };
+
+[$('orderModal'), $('paymentModal')].forEach(m => {
+  m.addEventListener('click', e => {
+    if (e.target === m) {
+      m.classList.remove('show');
+      document.body.style.overflow = '';
+    }
+  });
+});
+</script>
+</body>
+</html>
